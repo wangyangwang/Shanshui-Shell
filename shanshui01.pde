@@ -13,7 +13,8 @@ import controlP5.*;
 import ddf.minim.analysis.*;
 import ddf.minim.*;
 import java.awt.Dimension;
-import glitchP5.*; // import GlitchP5
+import glitchP5.*;
+import codeanticode.syphon.*;
 
 GlitchP5 glitchP5; // declare an instance of GlitchP5. only one is needed
 
@@ -83,6 +84,10 @@ FFT fft;
 //OPENNI
 SimpleOpenNI context;
 
+
+//SYPHON
+SyphonServer server;
+
 void settings() {
   size(1440, 800, P3D);
 }
@@ -92,11 +97,13 @@ void setup() {
 
   //OPENNI
   context = new SimpleOpenNI(this);
+
   if (!context.isInit()) {
     println("Can't init SimpleOpenNI, maybe the camera is not connected!"); 
-    exit();
-    return;
+    //exit();
+    //return;
   }
+
   context.enableUser();
   //  context.enableDepth();
   //  context.setMirror(true);
@@ -149,6 +156,11 @@ void setup() {
   String[] args = {"Console"};
   Console console = new Console();
   PApplet.runSketch(args, console);
+
+
+
+  //SYPHON
+  server = new SyphonServer(this, "Shell Main");
 }
 
 
@@ -171,11 +183,6 @@ void draw() {
   fogfar = map(fftSpectrum2 * 100, 50, 80, 1200, 0);
   fogColor.set("fogNear", fognear); 
   fogColor.set("fogFar", fogfar);
-
-  //if (!addedAttractor) {
-  //  //physics.addBehavior(centerAttraction);
-  //  addedAttractor = true;
-  //}
 
   float cellSize = (float)DIM * 2 / GRID;
   Console.log("float cellSize = (float)DIM * 2 / GRID;");
@@ -363,6 +370,7 @@ void draw() {
   fill(255);
   text(frameRate, width-50, 20);
   glitchP5.run();
+  //server.sendScreen();
   ui.draw();
 }
 
