@@ -12,8 +12,7 @@ public static class Console extends PApplet {
 
 
   public void settings() {
-    //size(1920, 1080, P3D);
-    fullScreen(P3D,1);
+    fullScreen(P3D,2);
     //smooth();
   }
 

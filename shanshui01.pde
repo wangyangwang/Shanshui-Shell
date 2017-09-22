@@ -17,6 +17,10 @@ import glitchP5.*;
 import codeanticode.syphon.*;
 
 
+//注意：
+//请在运行前安装字体Pixel.ttf  文件就在跟这个文件的同级的文件夹里面，不然找不到字体会显示默认的丑丑字体
+
+
 boolean useSyphon = false;
 GlitchP5 glitchP5; // declare an instance of GlitchP5. only one is needed
 
@@ -73,8 +77,7 @@ SimpleOpenNI context;
 SyphonServer server;
 
 void settings() {
-  //size(1280, 720, P3D);
-  fullScreen(P3D,2);
+  fullScreen(P3D,1);
 }
 
 void setup() {
@@ -151,8 +154,6 @@ void draw() {
 
   //OPENNI
   context.update();
-
-
 
   fogColor.set("_Time", (float)millis()/10000.0);
 
@@ -250,7 +251,7 @@ void draw() {
   pushMatrix();
 
 
-  float ztranslate = 0;
+  float ztranslate = 200;
   //  if (!Float.isNaN(zdist)) {
   //    ztranslate = map(zdist, 0, 1, 150, -150);
   //  }
@@ -281,7 +282,6 @@ void draw() {
   rotateX(sceneRotation.x);
   rotateY(sceneRotation.y);
   rotateZ(sceneRotation.z);
-
 
 
   float n1 = noise(sceneRotationXNoiseIndex);
@@ -331,6 +331,7 @@ void draw() {
       text(coordinateText, p.x, p.y, p.z);
     }
   }
+  
   showCoordinateNoiseIndex+=0.01;
   shader(fogColor);
   drawVolumeMesh(mesh);
