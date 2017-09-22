@@ -17,4 +17,3 @@ void onVisibleUser(SimpleOpenNI curContext, int userId)
 {
   //println("onVisibleUser - userId: " + userId);
 }
-

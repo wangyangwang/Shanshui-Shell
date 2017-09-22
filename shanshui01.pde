@@ -80,17 +80,15 @@ AudioPlayer player;
 FFT fft;
 
 
-
 //OPENNI
 SimpleOpenNI context;
-PVector com = new PVector();
-PVector com2d = new PVector();
-float oldzdist;
+
+void settings() {
+  size(1440, 900, P3D);
+}
 
 
 void setup() {
-
-  size(1440, 800, P3D);
 
   //OPENNI
   context = new SimpleOpenNI(this);
@@ -112,7 +110,7 @@ void setup() {
 
 
   physics.setWorldBounds(new AABB(
-  new Vec3D(), new Vec3D(DIM, DIM, DIM)
+    new Vec3D(), new Vec3D(DIM, DIM, DIM)
     )); //world bound
 
   if (surface!=null) {
@@ -163,7 +161,6 @@ void draw() {
   //  fftSpectrum1pre = fftSpectrum1;
   fftSpectrum2 = (fft.getBand(20) - fftSpectrum2pre) * 0.01 + fftSpectrum2pre;
   fftSpectrum2pre = fftSpectrum2;
-
 
   //println(fftSpectrum2*100);
   //fogfar = fftSpectrum2 * 100000;
@@ -355,4 +352,3 @@ void keyPressed() {
     ui.show();
   }
 }
-
