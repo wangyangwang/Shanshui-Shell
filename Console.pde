@@ -1,42 +1,46 @@
 public static class Console extends PApplet {
 
   static String content = "";
-  PFont Inconsolata;
-  int maxLength = 8000;
+  PFont font;
+  int maxLength = 1000;
+  int maxline = 30;
+
+  boolean useSyphon = false;
 
   //SYPHON
   SyphonServer server;
 
 
   public void settings() {
-    size(540, 960, P3D);
-    smooth();
+    //size(1920, 1080, P3D);
+    fullScreen(P3D,1);
+    //smooth();
   }
 
   public void setup() {
-    frameRate(10);
-    surface.setResizable(true);
+    //frameRate(10);
+    //surface.setResizable(true);
 
+    font = createFont("Pixel", 50);
 
     //SYPHON
-    server = new SyphonServer(this, "Console");
+    if (useSyphon)server = new SyphonServer(this, "Console");
   }
 
   public void draw() {
-    fill(0, 100);
-    noStroke();
-    rect(0, 0, width, height);
-    textSize(10);
+    resetShader();
+    background(0, 0, 255);
+    textFont(font);
+    textSize(25);
     fill(255);
-    stroke(255);
-    //textAlign(LEFT, BOTTOM);
+    noStroke();
     text(content, 0, 0, width, height);
 
     if (content.length() > maxLength) {
       content = content.substring(content.length()-maxLength);
     }
 
-    //server.sendScreen();
+    if (useSyphon)server.sendScreen();
   }
 
   public static void log(String s) {

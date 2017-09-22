@@ -16,47 +16,31 @@ import java.awt.Dimension;
 import glitchP5.*;
 import codeanticode.syphon.*;
 
+
+boolean useSyphon = false;
 GlitchP5 glitchP5; // declare an instance of GlitchP5. only one is needed
 
 
-
 VerletPhysics physics;
-
 ParticleConstraint boundingSphere;
 ParticleConstraint boundingSphereOutside;
-
 GravityBehavior gravity;
-
-
 VolumetricSpaceArray volume;
-
-
 IsoSurface isosurface;
-
-
 TriangleMesh mesh = new TriangleMesh("fluid");
-
-
 Vec3D colAmp = new Vec3D(400, 200, 200);
-
-int NUM_FLOATING_PARTICLES = 300;
+int NUM_FLOATING_PARTICLES = 250;
 int NUM_PARTICLES = 50;
-
-
-float REST_LENGTH = 500;
-
 /// Resolution
 int DIM = 500;
 /// Numer of grid
 int GRID = 30;
-
 Vec3D SCALE = new Vec3D(DIM, DIM, DIM).scale(2);
 float isoThreshold = 3;
 float isoThresholdMultiplyer = 0.001;
 int numP;
 float volMultiplier = 1.0;
 float centerSphereSizeMul = 0.3;
-
 color backgroundColor;
 
 boolean showPhysics=false;
@@ -89,9 +73,9 @@ SimpleOpenNI context;
 SyphonServer server;
 
 void settings() {
-  size(1440, 800, P3D);
+  //size(1280, 720, P3D);
+  fullScreen(P3D,2);
 }
-
 
 void setup() {
 
@@ -105,14 +89,11 @@ void setup() {
   }
 
   context.enableUser();
-  //  context.enableDepth();
-  //  context.setMirror(true);
 
   //VISUAL
   fogColor = loadShader("fogColor.glsl");
   fogColor.set("fogNear", 0.0);
   fogColor.set("fogFar", fogfar);
-  Console.logln("fogColor: "+fogColor);
 
   physics = new VerletPhysics();
 
@@ -158,16 +139,19 @@ void setup() {
   PApplet.runSketch(args, console);
 
 
-
   //SYPHON
-  server = new SyphonServer(this, "Shell Main");
+  if (useSyphon) {
+    server = new SyphonServer(this, "Shell Main");
+  }
 }
 
 
 void draw() {
 
+
   //OPENNI
   context.update();
+
 
 
   fogColor.set("_Time", (float)millis()/10000.0);
@@ -185,7 +169,6 @@ void draw() {
   fogColor.set("fogFar", fogfar);
 
   float cellSize = (float)DIM * 2 / GRID;
-  Console.log("float cellSize = (float)DIM * 2 / GRID;");
   int index = 0;
   //ADD PARTICLE TO FLOATING PHYSICS
   if (physics.particles.size()==0) {
@@ -207,16 +190,11 @@ void draw() {
       MyVerletParticle p = (MyVerletParticle)physics.particles.get(i);
       if (p.inCenterSphere) {
         p.addForce(new Vec3D(random(-0.05, 0.05), random(-0.05, 0.05), random(-0.05, 0.05)) );
-        if (random(0, 1)>0.9) {
-          Console.log(p.x+","+p.y+","+p.z+",");
-        }
       } else {
         p.addForce(new Vec3D(random(-0.02, 0.02), random(-0.02, 0.02), random(-0.02, 0.02)) );
       }
     }
   }
-
-
 
   numP=physics.particles.size();
 
@@ -227,7 +205,7 @@ void draw() {
   Vec3D offset = physics.getWorldBounds().getMin();
   float[] volumeData = volume.getData();
   index = 0;
-  Console.log("for for for loop");
+
   for (int z = 0; z < GRID; z++) {
     pos.z = z * cellSize + offset.z;
     for (int x = 0; x < GRID; x++) {
@@ -254,17 +232,14 @@ void draw() {
 
   volume.closeSides();
 
-  Console.log("volume.closeSides();");
-
-
   isosurface.reset();
-  Console.log("isosurface.reset();");
+
   isoThreshold = map(sin(isoThreshold_index), -1, 1, 0.001, 0.007);
-  Console.log("isoThreshold = map(sin(" + isoThreshold_index  +"), -1, 1, 0.001, 0.007);");
 
+  if (frameCount % 60 == 0) {
+    Console.log("new iso threshold: " + isoThreshold);
+  }
   //println(isoThreshold);
-
-  //  isoThreshold = map(fftSpectrum0*1000, 10, 0, 0.001, 0.009);
 
   isoThreshold_index+=0.05/frameRate;
   //println(isoThreshold_index);
@@ -289,18 +264,18 @@ void draw() {
 
   backgroundColor = color( map(sin(BGNoiseIndex), -1, 1, 0, 1) * 255, map(sin(bg_b_noise_index), -1, 1, 0, 70), map(sin(bg_b_noise_index), -1, 1, 0, 210) );
   BGNoiseIndex += 0.03/frameRate;
-  Console.log(BGNoiseIndex);
+
   bg_b_noise_index += 0.01/frameRate;
-  Console.log(bg_b_noise_index);
+
   background(backgroundColor);
-  Console.log(backgroundColor);
+
   fill(backgroundColor);
   sphere(1300);
   noLights();
 
 
   resetShader();
-  Console.log("resetShader();");
+
   colorMode(RGB, 255);
 
   rotateX(sceneRotation.x);
@@ -313,7 +288,7 @@ void draw() {
   float n2 = noise(sceneRotationYNoiseIndex);
   float n3 = noise(sceneRotationZNoiseIndex);
 
-  Console.log(n1+","+n2+","+n3);
+
 
   float xincre = map(n1, 0, 1, 0.0007, 0.0015);
   float yincre = map(n2, 0, 1, 0.0007, 0.0015);
@@ -324,10 +299,6 @@ void draw() {
   sceneRotationXNoiseIndex+=0.01;
   sceneRotationYNoiseIndex+=0.01;
   sceneRotationZNoiseIndex+=0.01;
-
-  Console.log(sceneRotationXNoiseIndex);
-  Console.log(sceneRotationYNoiseIndex);
-  Console.log(sceneRotationZNoiseIndex);
 
 
   if (drawCoordinate) {
@@ -361,17 +332,16 @@ void draw() {
     }
   }
   showCoordinateNoiseIndex+=0.01;
-  Console.log(" drawVolumeMesh(mesh);");
   shader(fogColor);
   drawVolumeMesh(mesh);
   popMatrix();
-
+  
   resetShader();
   fill(255);
   text(frameRate, width-50, 20);
   glitchP5.run();
-  //server.sendScreen();
-  ui.draw();
+  if (useSyphon)server.sendScreen();
+  //ui.draw();
 }
 
 void normal(Vec3D v) {

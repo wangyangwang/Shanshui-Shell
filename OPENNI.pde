@@ -1,7 +1,7 @@
 void onNewUser(SimpleOpenNI curContext, int userId)
 {
-  Console.log("onNewUser - userId: " + userId);
-  Console.log("\tstart tracking skeleton");
+  Console.logln("onNewUser - userId: " + userId + "....");
+  Console.logln("\tstart tracking skeleton...");
 
   curContext.startTrackingSkeleton(userId);
 
@@ -10,10 +10,10 @@ void onNewUser(SimpleOpenNI curContext, int userId)
 
 void onLostUser(SimpleOpenNI curContext, int userId)
 {
-  Console.log("onLostUser - userId: " + userId);
+  Console.logln("onLostUser - userId: " + userId+"....");
 }
 
 void onVisibleUser(SimpleOpenNI curContext, int userId)
 {
-  Console.log("onVisibleUser - userId: " + userId);
+  //Console.log("onVisibleUser - userId: " + userId);
 }
