@@ -1,4 +1,4 @@
-import SimpleOpenNI.*;
+//import SimpleOpenNI.*;
 import processing.opengl.*;
 import toxi.physics.*;
 import toxi.physics.behaviors.*;
@@ -70,7 +70,7 @@ FFT fft;
 
 
 //OPENNI
-SimpleOpenNI context;
+//SimpleOpenNI context;
 
 
 //SYPHON
@@ -83,15 +83,15 @@ void settings() {
 void setup() {
 
   //OPENNI
-  context = new SimpleOpenNI(this);
+  //context = new SimpleOpenNI(this);
 
-  if (!context.isInit()) {
-    println("Can't init SimpleOpenNI, maybe the camera is not connected!"); 
-    //exit();
-    //return;
-  }
+  //if (!context.isInit()) {
+  //  println("Can't init SimpleOpenNI, maybe the camera is not connected!"); 
+  //  //exit();
+  //  //return;
+  //}
 
-  context.enableUser();
+  //context.enableUser();
 
   //VISUAL
   fogColor = loadShader("fogColor.glsl");
@@ -153,7 +153,7 @@ void draw() {
 
 
   //OPENNI
-  context.update();
+  //context.update();
 
   fogColor.set("_Time", (float)millis()/10000.0);
 
