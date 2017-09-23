@@ -77,7 +77,7 @@ SimpleOpenNI context;
 SyphonServer server;
 
 void settings() {
-  fullScreen(P3D,1);
+  size(1280, 720, P3D);
 }
 
 void setup() {
@@ -251,7 +251,7 @@ void draw() {
   pushMatrix();
 
 
-  float ztranslate = 200;
+  float ztranslate = 0;
   //  if (!Float.isNaN(zdist)) {
   //    ztranslate = map(zdist, 0, 1, 150, -150);
   //  }
@@ -331,12 +331,12 @@ void draw() {
       text(coordinateText, p.x, p.y, p.z);
     }
   }
-  
+
   showCoordinateNoiseIndex+=0.01;
   shader(fogColor);
   drawVolumeMesh(mesh);
   popMatrix();
-  
+
   resetShader();
   fill(255);
   text(frameRate, width-50, 20);
@@ -359,5 +359,9 @@ void keyPressed() {
   }
   if (key=='s') {
     ui.show();
+  }
+
+  if (key=='t') {
+    triggerInteraction();
   }
 }

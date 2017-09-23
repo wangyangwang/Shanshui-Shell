@@ -12,8 +12,9 @@ public static class Console extends PApplet {
 
 
   public void settings() {
-    fullScreen(P3D,2);
-    //smooth();
+    size(1280, 720);
+    //fullScreen(P3D,2);
+    smooth();
   }
 
   public void setup() {
@@ -27,7 +28,7 @@ public static class Console extends PApplet {
   }
 
   public void draw() {
-    resetShader();
+    //resetShader();
     background(0, 0, 255);
     textFont(font);
     textSize(25);

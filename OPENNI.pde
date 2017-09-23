@@ -4,8 +4,7 @@ void onNewUser(SimpleOpenNI curContext, int userId)
   Console.logln("\tstart tracking skeleton...");
 
   curContext.startTrackingSkeleton(userId);
-
-  glitchP5.glitch(width/2, height/2, 100, 100, width, height, 2, 1.0f, 0, 10);
+  triggerInteraction();
 }
 
 void onLostUser(SimpleOpenNI curContext, int userId)
@@ -16,4 +15,9 @@ void onLostUser(SimpleOpenNI curContext, int userId)
 void onVisibleUser(SimpleOpenNI curContext, int userId)
 {
   //Console.log("onVisibleUser - userId: " + userId);
+}
+
+
+void triggerInteraction() {
+  glitchP5.glitch(width/2, height/2, 100, 100, width, height, 2, 1.0f, 0, 10);
 }
