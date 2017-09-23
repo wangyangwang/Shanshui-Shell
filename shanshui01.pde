@@ -15,6 +15,9 @@ import ddf.minim.*;
 import java.awt.Dimension;
 import glitchP5.*;
 import codeanticode.syphon.*;
+import gab.opencv.*;
+import processing.video.*;
+import java.awt.*;
 
 
 //注意：
@@ -71,7 +74,12 @@ FFT fft;
 
 //OPENNI
 SimpleOpenNI context;
-
+boolean kinectNotConnected;
+//Kinect alternative: web cam
+Capture video;
+OpenCV opencv;
+int faceN;
+int preFaceN;
 
 //SYPHON
 SyphonServer server;
@@ -89,6 +97,11 @@ void setup() {
     println("Can't init SimpleOpenNI, maybe the camera is not connected!"); 
     //exit();
     //return;
+    kinectNotConnected = true;
+    video = new Capture(this, 640/2, 480/2);
+    opencv = new OpenCV(this, 640/2, 480/2);
+    opencv.loadCascade(OpenCV.CASCADE_FRONTALFACE);  
+    video.start();
   }
 
   context.enableUser();
@@ -154,6 +167,18 @@ void draw() {
 
   //OPENNI
   context.update();
+
+  if (kinectNotConnected) {
+    opencv.loadImage(video);
+    Rectangle[] faces = opencv.detect();
+    faceN = faces.length;
+    if (faceN != preFaceN) {
+      triggerInteraction();
+      Console.logln("total face number changed....");
+    }
+    preFaceN = faceN;
+  }
+
 
   fogColor.set("_Time", (float)millis()/10000.0);
 
